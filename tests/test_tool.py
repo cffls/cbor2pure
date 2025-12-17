@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-import cbor2.tool
+import cbor2pure.tool
 
 
 @pytest.mark.parametrize(
@@ -18,12 +18,12 @@ import cbor2.tool
     ids=["tuple", "byte_key", "recursion"],
 )
 def test_key_to_str(value, expected):
-    assert cbor2.tool.key_to_str(value) == expected
+    assert cbor2pure.tool.key_to_str(value) == expected
 
 
 def test_default():
     with pytest.raises(TypeError):
-        json.dumps(BytesIO(b""), cls=cbor2.tool.DefaultEncoder)
+        json.dumps(BytesIO(b""), cls=cbor2pure.tool.DefaultEncoder)
 
 
 @pytest.mark.parametrize(
@@ -32,15 +32,15 @@ def test_default():
     ids=["dict", "list"],
 )
 def test_self_referencing(payload):
-    decoded = cbor2.loads(binascii.unhexlify(payload))
+    decoded = cbor2pure.loads(binascii.unhexlify(payload))
     with pytest.raises(ValueError, match="Cannot convert self-referential data to JSON"):
-        cbor2.tool.key_to_str(decoded)
+        cbor2pure.tool.key_to_str(decoded)
 
 
 def test_nonrecursive_ref():
     payload = "d81c83d81ca26162d81ca16161016163d81d02d81d01d81d01"
-    decoded = cbor2.loads(binascii.unhexlify(payload))
-    result = cbor2.tool.key_to_str(decoded)
+    decoded = cbor2pure.loads(binascii.unhexlify(payload))
+    result = cbor2pure.tool.key_to_str(decoded)
     expected = [
         {"b": {"a": 1}, "c": {"a": 1}},
         {"b": {"a": 1}, "c": {"a": 1}},
@@ -56,7 +56,7 @@ def test_stdin(monkeypatch, tmpdir):
     with monkeypatch.context() as m:
         m.setattr("sys.argv", [""] + argv)
         m.setattr("sys.stdin", inbuf)
-        cbor2.tool.main()
+        cbor2pure.tool.main()
         assert f.read() == "2\n"
 
 
@@ -68,7 +68,7 @@ def test_stdout(monkeypatch, tmpdir):
         m.setattr("sys.argv", [""] + argv)
         m.setattr("sys.stdin", inbuf)
         m.setattr("sys.stdout", outbuf)
-        cbor2.tool.main()
+        cbor2pure.tool.main()
 
 
 def test_readfrom(monkeypatch, tmpdir):
@@ -78,7 +78,7 @@ def test_readfrom(monkeypatch, tmpdir):
     argv = ["-o", str(outfile), str(f)]
     with monkeypatch.context() as m:
         m.setattr("sys.argv", [""] + argv)
-        cbor2.tool.main()
+        cbor2pure.tool.main()
         assert outfile.read() == "2\n"
 
 
@@ -89,7 +89,7 @@ def test_b64(monkeypatch, tmpdir):
     with monkeypatch.context() as m:
         m.setattr("sys.argv", [""] + argv)
         m.setattr("sys.stdin", inbuf)
-        cbor2.tool.main()
+        cbor2pure.tool.main()
         assert f.read() == '{"2": 3}\n'
 
 
@@ -100,7 +100,7 @@ def test_stream(monkeypatch, tmpdir):
     with monkeypatch.context() as m:
         m.setattr("sys.argv", [""] + argv)
         m.setattr("sys.stdin", inbuf)
-        cbor2.tool.main()
+        cbor2pure.tool.main()
         assert f.read() == "2\n3\n"
 
 
@@ -111,7 +111,7 @@ def test_embed_bytes(monkeypatch, tmpdir):
     with monkeypatch.context() as m:
         m.setattr("sys.argv", [""] + argv)
         m.setattr("sys.stdin", inbuf)
-        cbor2.tool.main()
+        cbor2pure.tool.main()
         assert f.read() == '"\\\\xc2\\\\xc2"\n'
 
 
@@ -122,7 +122,7 @@ def test_dtypes_from_file(monkeypatch, tmpdir):
     argv = ["--sort-keys", "--pretty", "-d", "-o", str(outfile), str(infile)]
     with monkeypatch.context() as m:
         m.setattr("sys.argv", [""] + argv)
-        cbor2.tool.main()
+        cbor2pure.tool.main()
         assert outfile.read() == expected
 
 
@@ -134,5 +134,5 @@ def test_ignore_tag(monkeypatch, tmpdir):
     with monkeypatch.context() as m:
         m.setattr("sys.argv", [""] + argv)
         m.setattr("sys.stdin", inbuf)
-        cbor2.tool.main()
+        cbor2pure.tool.main()
         assert f.read() == expected

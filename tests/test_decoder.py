@@ -18,7 +18,7 @@ from uuid import UUID
 
 import pytest
 
-from cbor2 import FrozenDict
+from cbor2pure import FrozenDict
 
 
 def test_fp_attr(impl):

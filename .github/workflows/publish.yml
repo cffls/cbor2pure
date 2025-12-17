@@ -9,36 +9,8 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
 
 jobs:
-  binary-wheels:
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          - ubuntu-24.04-arm
-          - windows-latest
-          - windows-11-arm
-          - macos-13
-          - macos-latest
-    runs-on: ${{ matrix.os }}
-    environment: release
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build wheels
-      uses: pypa/cibuildwheel@v3.1.2
-      env:
-        CBOR2_BUILD_C_EXTENSION: "1"
-        CIBW_SKIP: "*t-*"
-        CIBW_ARCHS: "auto64"
-        CIBW_TEST_GROUPS: "test"
-        CIBW_TEST_COMMAND: "python -m pytest {project}/tests"
-    - uses: actions/upload-artifact@v4
-      with:
-        name: wheels-${{ matrix.os }}
-        path: wheelhouse/*.whl
-
   sdist-purewheel:
     runs-on: ubuntu-latest
-    environment: release
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -49,19 +21,15 @@ jobs:
       run: pip install build
     - name: Create sdist and pure-Python wheel
       run: python -m build .
-      env:
-        CBOR2_BUILD_C_EXTENSION: "0"
     - uses: actions/upload-artifact@v4
       with:
-        name: sdist
+        name: dist
         path: dist/*
 
   publish:
     needs:
-      - binary-wheels
       - sdist-purewheel
     runs-on: ubuntu-latest
-    environment: release
     permissions:
       id-token: write
     steps:
@@ -69,15 +37,14 @@ jobs:
       uses: actions/download-artifact@v4
     - name: Move the packages to dist/
       run: |
-        mkdir dist
-        mv */*.whl */*.tar.gz dist
+        mkdir -p dist
+        mv */*.whl */*.tar.gz dist 2>/dev/null || true
     - name: Upload packages
       uses: pypa/gh-action-pypi-publish@release/v1
 
   release:
     name: Create a GitHub release
     needs:
-      - binary-wheels
       - sdist-purewheel
     runs-on: ubuntu-latest
     permissions:

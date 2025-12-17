@@ -6,10 +6,10 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cbor2"
+name = "cbor2pure"
 description = "CBOR (de)serializer with extensive tag support"
 readme = "README.rst"
-authors = [{name = "Alex Grönholm", email = "alex.gronholm@nextday.fi"}]
+authors = [{name = "Jerry", email = "jerrycgh@gmail.com"}]
 license = "MIT"
 keywords = ["serialization", "cbor"]
 classifiers = [
@@ -35,7 +35,7 @@ Documentation = "https://cbor2.readthedocs.org/en/latest/"
 "Issue Tracker" = "https://github.com/agronholm/cbor2/issues"
 
 [project.scripts]
-cbor2 = "cbor2.tool:main"
+cbor2pure = "cbor2pure.tool:main"
 
 [dependency-groups]
 test = [
@@ -55,7 +55,7 @@ benchmarks = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["cbor2"]
+include = ["cbor2pure"]
 
 [tool.setuptools_scm]
 version_scheme = "post-release"
@@ -83,7 +83,7 @@ addopts = "-rsfE --tb=short"
 testpaths = ["tests"]
 
 [tool.coverage.run]
-source = ["cbor2"]
+source = ["cbor2pure"]
 relative_files = true
 
 [tool.coverage.report]
@@ -98,7 +98,7 @@ requires = ["tox >= 4.22"]
 commands = [["pytest", { replace = "posargs", extend = true }]]
 package = "wheel"
 dependency_groups = ["test"]
-set_env = { TZ = "America/New_York", CBOR2_BUILD_C_EXTENSION = "1" }
+set_env = { TZ = "America/New_York" }
 
 [tool.tox.env.pypy3]
 set_env = { TZ = "America/New_York" }

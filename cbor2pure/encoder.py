@@ -6,5 +6,6 @@ from ._encoder import dumps as dumps
 from ._encoder import shareable_encoder as shareable_encoder
 
 warn(
-    "The cbor2.encoder module has been deprecated. Instead import everything directly from cbor2."
+    "The cbor2pure.encoder module has been deprecated. "
+    "Instead import everything directly from cbor2pure."
 )

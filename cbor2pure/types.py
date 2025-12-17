@@ -12,4 +12,7 @@ from ._types import CBORTag as CBORTag
 from ._types import FrozenDict as FrozenDict
 from ._types import undefined as undefined
 
-warn("The cbor2.types module has been deprecated. Instead import everything directly from cbor2.")
+warn(
+    "The cbor2pure.types module has been deprecated. "
+    "Instead import everything directly from cbor2pure."
+)

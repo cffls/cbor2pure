@@ -124,7 +124,7 @@ def key_to_str(d: T, dict_ids: set[int] | None = None) -> str | list[Any] | dict
 
 
 def main() -> None:
-    prog = "python -m cbor2.tool"
+    prog = "python -m cbor2pure.tool"
     description = (
         "A simple command line interface for cbor2 module "
         "to validate and pretty-print CBOR objects."
