@@ -9,15 +9,16 @@ from datetime import date, datetime, timedelta, timezone
 from io import BytesIO
 from typing import IO, TYPE_CHECKING, Any, TypeVar, cast, overload
 
-from ._types import (
+from cbor2 import (
     CBORDecodeEOF,
     CBORDecodeValueError,
     CBORSimpleValue,
     CBORTag,
     FrozenDict,
-    break_marker,
     undefined,
 )
+
+from ._types import break_marker
 
 if TYPE_CHECKING:
     from decimal import Decimal

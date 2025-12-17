@@ -13,15 +13,17 @@ from io import BytesIO
 from sys import modules
 from typing import IO, TYPE_CHECKING, Any, cast
 
-from ._types import (
+from cbor2 import (
     CBOREncodeTypeError,
     CBOREncodeValueError,
     CBORSimpleValue,
     CBORTag,
     FrozenDict,
-    UndefinedType,
     undefined,
 )
+
+# Get UndefinedType from the undefined singleton
+UndefinedType = type(undefined)
 
 if TYPE_CHECKING:
     from decimal import Decimal
